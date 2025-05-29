@@ -1,0 +1,68 @@
+PROHASHING API - SUMMARY
+
+API Access:
+- Base URL: Via WAMP API or HTTP proxy
+- Authentication: API Key (read-only recommended)
+- Data Format: JSON
+- Protocols: WAMP (real-time) + REST (periodic)
+
+Key Endpoints:
+- / - Service health check (HTTP 200)
+- /status - WAMP connection status and last update times
+- /profitability - Algorithm profitability data
+
+PPLNS Scrypt Mining:
+- Algorithm ID: 1 (Scrypt)
+- Profitability metrics in USD/BTC
+- Real-time worker status monitoring
+- Pool performance data
+
+Worker Status Data:
+{
+  "connected": true,
+  "updating": true,
+  "lastUpdates": {"profitability": "2019-01-15T00:00:52+00:00"}
+}
+
+Profitability Response:
+{
+  "1": {
+    "algorithm_name": "Scrypt",
+    "usd": 0.0025041009705167,
+    "btc": 6.8628068694276e-7,
+    "max_usd": 0.0052676028280028,
+    "max_btc": 1.4445957481592e-6,
+    "percentile_usd": 0.0023765266674273,
+    "percentile_btc": 6.5173886514719e-7,
+    "data_timestamp": 1547510680.4959,
+    "server_timestamp": 1547510683.3438,
+    "server_id": 4
+  }
+}
+
+Authentication:
+- Environment variable: PROHASHING_API_KEY
+- Read-only API keys for monitoring
+- No explicit rate limits documented
+- Estimated: ~5,000 requests/hour (industry standard)
+
+Real-time Data:
+- WAMP protocol for push updates
+- HTTP proxy for REST access
+- Update frequency: Real-time via WAMP
+- Healthcheck: Updates within 10 minutes
+
+Worker Configuration:
+- Algorithm specification: password parameter (a=scrypt)
+- Proper config required for accurate status
+- Legacy work_refresh_mode parameter (deprecated)
+
+Supported Algorithms:
+- Scrypt (ID: 1)
+- SHA-256 (ID: 2) 
+- X11 (ID: 4)
+- Neoscrypt (ID: 8)
+- Ethash (ID: 10)
+- Equihash (ID: 18)
+- Lyra2REv2 (ID: 29)
+- CryptonightV8 (ID: 34)

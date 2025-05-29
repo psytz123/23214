@@ -1,0 +1,44 @@
+VNISH HASHCORE TOOLKIT - API SUMMARY
+
+API Access:
+- Endpoint: http://miner_IP_address/docs/
+- Authentication: IP-based access (local network)
+- Data Format: JSON
+- Access Method: HTTP REST API
+
+Available Telemetry Data:
+- Hashrate: Total and per-chip hashrate (TH/s, MH/s)
+- Temperature: Chip, board, water inlet/outlet temperatures
+- Power Usage: Real-time power consumption in watts
+- Uptime: Miner operational duration
+- Chip Status: Individual chip performance and health
+- Fan RPM: Cooling system monitoring
+
+Key Endpoints:
+- /summary - Total hashrate, temperature, power, status
+- /chips - Individual chip data array
+- /chains - Hashboard health and chain status
+
+JSON Response Structure:
+{
+  "summary": {
+    "hashrate": "150 TH/s",
+    "temperature": {"chip": 75, "board": 65, "water_inlet": 20, "water_outlet": 25},
+    "power": 3400
+  },
+  "chips": [{"id": 1, "hashrate": "1.2 TH/s", "temperature": 75}]
+}
+
+Integration Requirements:
+- Local network access to miner IP
+- HTTP client capability
+- JSON parsing
+- No external authentication required
+- Direct ASIC miner communication
+
+Fleet Management Features:
+- Mass configuration deployment
+- Bulk firmware updates
+- Network scanning and discovery
+- Automated monitoring and alerts
+- Profile cloning across miners

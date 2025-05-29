@@ -1,0 +1,55 @@
+VNISH TOOLKIT AND API INFORMATION
+
+From toolkit.vnish.com:
+- Comprehensive statistics: Monitor key performance indicators of your equipment
+- Mass management: Clone settings, reduce management time. Whatever is available for one miner is available for all
+- Easy filtering and sorting: Find exactly the devices you need with filters and sorting options
+- User-friendly functionality: Customise your workspace to suit your needs, identifying the most important metrics to achieve operational efficiency
+- Automation: Perform customization and automatic firmware updates in the system. The system will notify you when there are updates available
+- Mass installation: Ability to install firmware on an unlimited number of miners in one network at the same time
+
+From vnish.group FAQ:
+- API Documentation: You can view the documentation in the firmware itself by opening http://miner_IPaddress/docs/ in the address bar
+- Vnish firmware supports multiple Antminer models (S19, T19, L7, S21, S21XP, and others)
+- Built-in API endpoints accessible via the miner's web interface
+- APIs provide detailed telemetry data including hashrate, temperature, power consumption, and chip status
+- Data formatted in JSON for easy integration
+- Temperature management with auto temperature presets
+- Sensor bypass capabilities for faulty temperature sensors
+- Mass deployment and configuration using Hashcore Toolkit
+
+API Features:
+- Summary Data: Total hashrate, temperature, power consumption, and status
+- Chips Data: Individual chip hashrates, temperature readings, and throttling status
+- Chains and Boards: Data on hashboard health, chain status, and operational parameters
+
+Example JSON structure:
+{
+  "summary": {
+    "hashrate": "150 TH/s",
+    "temperature": {
+      "chip": 75,
+      "board": 65,
+      "water_inlet": 20,
+      "water_outlet": 25
+    },
+    "power": 3400
+  },
+  "chips": [
+    {
+      "id": 1,
+      "hashrate": "1.2 TH/s",
+      "temperature": 75
+    }
+  ]
+}
+
+Control Board Types:
+- "aml" – control board based on Amlogic processor (without SD card)
+- "bb" – Beagle Bone double-level control board (SD card slot can be found inside)
+- "xil" – control board based on Zylinx processor (with SD card)
+- "cvc" – control board based on CVITEK processor (with SD card)
+
+Installation Methods:
+- "sd" – installation method type, based on SD card (available for all users)
+- "nand" – installation in NAND memory directly, without SD card (requires special software, available for large farm operators)

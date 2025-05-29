@@ -1,0 +1,150 @@
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model MiningRig {
+  id                String   @id @default(cuid())
+  name              String
+  minerIp           String   @unique
+  model             String
+  firmwareVersion   String?
+  status            String   @default("offline") // online, offline, error, maintenance
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Relationships
+  telemetryData     TelemetryData[]
+  alerts            Alert[]
+  
+  @@map("mining_rigs")
+}
+
+model TelemetryData {
+  id              String   @id @default(cuid())
+  rigId           String
+  timestamp       DateTime @default(now())
+  hashrate        Float    // TH/s
+  chipTemp        Float    // Celsius
+  boardTemp       Float?   // Celsius
+  waterInletTemp  Float?   // Celsius
+  waterOutletTemp Float?   // Celsius
+  power           Float    // Watts
+  fanSpeed        Int?     // RPM
+  acceptedShares  Int      @default(0)
+  rejectedShares  Int      @default(0)
+  uptime          Int      @default(0) // seconds
+  efficiency      Float?   // W/TH
+  
+  // Relationships
+  rig             MiningRig @relation(fields: [rigId], references: [id], onDelete: Cascade)
+  
+  @@map("telemetry_data")
+  @@index([rigId, timestamp])
+}
+
+model PoolStats {
+  id                String   @id @default(cuid())
+  timestamp         DateTime @default(now())
+  algorithm         String   @default("Scrypt")
+  usdProfitability  Float    // USD per TH/s per day
+  btcProfitability  Float    // BTC per TH/s per day
+  maxUsd            Float?
+  maxBtc            Float?
+  percentileUsd     Float?
+  percentileBtc     Float?
+  serverId          Int?
+  dataTimestamp     Float?   // Unix timestamp from API
+  serverTimestamp   Float?   // Unix timestamp from API
+  
+  @@map("pool_stats")
+  @@index([timestamp])
+}
+
+model WorkerStatus {
+  id              String   @id @default(cuid())
+  workerId        String   @unique
+  minerIp         String
+  connected       Boolean  @default(false)
+  hashrate        Float    @default(0) // TH/s
+  sharesAccepted  Int      @default(0)
+  sharesRejected  Int      @default(0)
+  lastSeen        DateTime @default(now())
+  dailyEarnings   Float    @default(0) // USD
+  weeklyEarnings  Float    @default(0) // USD
+  monthlyEarnings Float    @default(0) // USD
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("worker_status")
+  @@index([workerId])
+}
+
+model Alert {
+  id           String   @id @default(cuid())
+  rigId        String?
+  severity     String   // info, warning, critical
+  message      String
+  minerIp      String?
+  timestamp    DateTime @default(now())
+  acknowledged Boolean  @default(false)
+  metricValue  Float?
+  threshold    Float?
+  resolved     Boolean  @default(false)
+  resolvedAt   DateTime?
+  
+  // Relationships
+  rig          MiningRig? @relation(fields: [rigId], references: [id], onDelete: SetNull)
+  
+  @@map("alerts")
+  @@index([timestamp, acknowledged])
+}
+
+model EarningsData {
+  id          String   @id @default(cuid())
+  timestamp   DateTime @default(now())
+  coin        String
+  amount      Float
+  usdValue    Float
+  percentage  Float
+  hashrate    Float    // TH/s allocated to this coin
+  
+  @@map("earnings_data")
+  @@index([timestamp, coin])
+}
+
+model ProfitabilityData {
+  id            String   @id @default(cuid())
+  timestamp     DateTime @default(now())
+  coin          String
+  algorithm     String
+  profitability Float    // USD per TH/s per day
+  difficulty    Float
+  blockReward   Float
+  price         Float    // USD
+  volume24h     Float    // USD
+  
+  @@map("profitability_data")
+  @@index([timestamp, coin])
+}
+
+model PerformanceHistory {
+  id          String   @id @default(cuid())
+  timestamp   DateTime @default(now())
+  hashrate    Float    // TH/s
+  power       Float    // Watts
+  temperature Float    // Celsius
+  earnings    Float    // USD
+  efficiency  Float    // W/TH
+  
+  @@map("performance_history")
+  @@index([timestamp])
+}
